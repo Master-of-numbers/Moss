@@ -1,0 +1,23 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Moss.App"
+             xmlns:local="using:Moss"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+  
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+    <Application.Styles>
+        <StyleInclude Source="avares://Notification.Avalonia/Themes/Generic.xaml" />
+    </Application.Styles>
+    <Application.Resources>
+        <FontFamily x:Key="NunitoFont">avares://Moss/Assets/Fonts#Nunito</FontFamily>
+        <FontFamily x:Key="JaroFont">avares://Moss/Assets/Fonts#Jaro</FontFamily>
+    </Application.Resources>
+
+</Application>

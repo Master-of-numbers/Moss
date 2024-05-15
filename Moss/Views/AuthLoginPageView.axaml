@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Moss.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:AuthLoginPageViewModel"
+             x:Class="Moss.Views.AuthLoginPageView">
+    <Design.DataContext>
+        <vm:AuthLoginPageViewModel/>
+    </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="CornerRadius" Value="10"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Foreground" Value="#D9D9D9"></Setter>
+            <Style Selector="^:checked">
+                <Setter Property="Background" Value="Aqua"></Setter>
+            </Style>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="#D9D9D9"></Setter>
+                <Setter Property="Foreground" Value="#424242"></Setter>
+            </Style>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="CornerRadius" Value="10"></Setter>
+            <Style Selector="^:focus">
+                <Setter Property="Background" Value="#424242"></Setter>
+                <Setter Property="Foreground" Value="#CF2929"></Setter>
+            </Style>
+            <Style Selector="^:disabled">
+                <Setter Property="Background" Value="#424242"></Setter>
+                <Setter Property="Foreground" Value="#CF2929"></Setter>
+            </Style>
+        </Style>
+    </UserControl.Styles>
+    <StackPanel VerticalAlignment="Center" Spacing="15" Width="290">
+        <Border CornerRadius="10" Background="#424242" Height="40">
+            <TextBlock VerticalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Text="Login"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       Foreground="#D9D9D9"/>
+        </Border>
+        <TextBox VerticalAlignment="Center"
+                 VerticalContentAlignment="Center"
+                 HorizontalContentAlignment="Left"
+                 Height="40"
+                 BorderThickness="0"
+                 Background="#D9D9D9" Foreground="#424242"
+                 FontSize="16"
+                 Text="{Binding UserName}"
+                 Watermark="Username"
+                 UseFloatingWatermark="False"/>
+        <TextBox Name="PasswordTextBox"
+                 VerticalAlignment="Center"
+                 VerticalContentAlignment="Center"
+                 HorizontalContentAlignment="Left"
+                 Height="40"
+                 Background="#D9D9D9" Foreground="#424242"
+                 FontSize="16"
+                 PasswordChar="*"
+                 Text="{Binding Password}"
+                 Watermark="Password"
+                 UseFloatingWatermark="False"/>
+        <Button Name="GoToUserPage"
+                VerticalAlignment="Center" HorizontalAlignment="Center"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                Background="#424242"
+                Foreground="#D9D9D9"
+                Width="100" Height="36"
+                Command="{Binding LoginNavigateSettings}"
+                Content="To Heaven"/>
+        <Button Name="DebugButton"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Content="dbData"
+                Command="{Binding ShowUsersInBaseCommand}"/>
+        <TextBox Text="{Binding UsersInBase}"/>
+    </StackPanel>
+</UserControl>

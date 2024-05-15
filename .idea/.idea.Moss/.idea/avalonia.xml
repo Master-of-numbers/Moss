@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Moss/App.axaml" value="Moss/Moss.csproj" />
+        <entry key="Moss/Views/AuthLoginPageView.axaml" value="Moss/Moss.csproj" />
+        <entry key="Moss/Views/AuthPageView.axaml" value="Moss/Moss.csproj" />
+        <entry key="Moss/Views/AuthRegPageStyle.axaml" value="Moss/Moss.csproj" />
+        <entry key="Moss/Views/AuthRegistrationPageView.axaml" value="Moss/Moss.csproj" />
+        <entry key="Moss/Views/LoginPageView.axaml" value="Moss/Moss.csproj" />
+        <entry key="Moss/Views/MainWindow.axaml" value="Moss/Moss.csproj" />
+        <entry key="Moss/Views/RegistrationPageView.axaml" value="Moss/Moss.csproj" />
+        <entry key="Moss/Views/SettingsPageView.axaml" value="Moss/Moss.csproj" />
+        <entry key="Moss/Views/UserPageView.axaml" value="Moss/Moss.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

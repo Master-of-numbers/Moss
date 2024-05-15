@@ -1,0 +1,258 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Moss.ViewModels"
+             xmlns:views="clr-namespace:Moss.Views"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:CompileBindings="True"
+             x:DataType="viewModels:UserPageViewModel"
+             x:Class="Moss.Views.UserPageView">
+    <Design.DataContext>
+        <views:UserPageView />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Button">
+            <Setter Property="CornerRadius" Value="17"></Setter>
+            <Setter Property="Height" Value="40"></Setter>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="CornerRadius" Value="17"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+        </Style>
+        <Style Selector="AutoCompleteBox">
+            <Setter Property="CornerRadius" Value="17"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+        </Style>
+        <Style Selector="AutoCompleteBox TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+        </Style>
+        
+    </UserControl.Styles>
+    <Grid ColumnDefinitions="*" RowDefinitions="Auto,*">
+        <Border
+                Height="90"
+                Grid.Column="0" Grid.Row="0"
+                CornerRadius="0,0,10,10"
+                Background="#CF2929"
+                Margin="0">
+            <Grid ColumnDefinitions="*,*,*" ShowGridLines="False">
+                <Grid Grid.Column="0" Margin="0,0,14,0"
+                      ColumnDefinitions="7*,3*">
+                    <AutoCompleteBox HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                     Grid.Column="0"
+                                     Margin="28,0,14,0"
+                                     Height="40" Background="#424242"
+                                     Watermark="search city..."
+                                     FilterMode="Contains"
+                                     Text="{Binding SearchCity}"
+                                     ItemsSource="{Binding Cityes}"
+                                     MinimumPrefixLength="2" IsEnabled="{Binding TokenExists}"
+                                     ></AutoCompleteBox>
+                    <Button HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            Grid.Column="1"
+                            Background="#424242" Foreground="#D9D9D9"
+                            Height="40" Margin="14,0,0,0"
+                            Content="Search"
+                            Command="{Binding ParseApiDataCommand}"/>
+                </Grid>
+                <Border Grid.Column="1"
+                        Background="#D9D9D9"
+                        Width="130" Height="40"
+                        VerticalAlignment="Center" HorizontalAlignment="Center"
+                        IsVisible="{Binding NotificationIsVisible}"
+                        CornerRadius="17">
+                    <TextBlock Foreground="#424242"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Text="{Binding NotificationText}"></TextBlock>
+                </Border>
+                <Grid Grid.Column="2" ColumnDefinitions="*,Auto" ShowGridLines="False">
+                    <Button Grid.Column="0" Background="#424242"
+                            Content="LogOut" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            FontSize="14" Width="130" Foreground="#D9D9D9"
+                            Margin="0,0,30,0"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Command="{Binding LogOutCommand}"></Button>
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Grid.Column="1"
+                            Background="#424242" Foreground="#D9D9D9"
+                            Width="130" Height="40"
+                            Margin="0,0,28,0"
+                            Content="Go Settings"
+                            VerticalContentAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            Command="{Binding NavigateSettingsCommand}"/>
+                </Grid>
+            </Grid>
+        </Border>
+        <Grid Grid.Row="1" ColumnDefinitions="*,2*" VerticalAlignment="Stretch" ShowGridLines="False">
+            <Border Grid.Column="0"
+                    CornerRadius="10"
+                    Background="#424242"
+                    Margin="28,28,14,28">
+                <Grid RowDefinitions="Auto,*"
+                      ShowGridLines="False"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch">
+                    <StackPanel Grid.Row="0" HorizontalAlignment="Stretch">
+                        <Border CornerRadius="10" Background="#888888"
+                                Margin="30,36,30,0" Height="40">
+                            <Grid ColumnDefinitions="*,*,*">
+                                <TextBlock Grid.Column="0" Text="Forecast:"
+                                           FontSize="16"
+                                           Foreground="White"
+                                           Margin="10,5,5,5"
+                                           VerticalAlignment="Center"></TextBlock>
+                                <Grid Grid.Column="1" ColumnDefinitions="Auto,*">
+                                    <Ellipse Grid.Column="0" Width="15" Height="15" Fill="#74D745"></Ellipse>
+                                    <TextBlock Grid.Column="1" Text="- PM2.5" VerticalAlignment="Center"
+                                               Margin="4,0,0,0"></TextBlock>
+                                </Grid>
+                                <Grid Grid.Column="2" ColumnDefinitions="Auto,*">
+                                    <Ellipse Grid.Column="0" Width="15" Height="15" Fill="#D7C045"></Ellipse>
+                                    <TextBlock Grid.Column="1" Text="- PM10" VerticalAlignment="Center"
+                                               Margin="4,0,0,0"></TextBlock>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                    <lvc:CartesianChart Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                        Series="{Binding Series}"
+                                        ZoomMode="Y"
+                                        XAxes="{Binding XAxes}"
+                                        YAxes="{Binding YAxes}"
+                                        >
+                    </lvc:CartesianChart>
+                </Grid>
+            </Border>
+            <Grid Grid.Column="1" RowDefinitions="11*, 5*" 
+                  Margin="14,28,28,28" ShowGridLines="False"
+                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Border Grid.Row="0"
+                        CornerRadius="10"
+                        Background="#424242"
+                        Margin="0,0,0,14"
+                        VerticalAlignment="Stretch">
+                    <Grid ColumnDefinitions="Auto,*,Auto,*,Auto"
+                          RowDefinitions="Auto,*,Auto"
+                          ShowGridLines="False">
+                        <StackPanel Grid.Column="0" Grid.Row="0" Width="28" Height="28"></StackPanel>
+                        <Grid Grid.Column="1" Grid.Row="1"
+                              RowDefinitions="*,*,*,*" ShowGridLines="False">
+                            <Border Grid.Row="0" CornerRadius="10" MinHeight="38" MinWidth="200"
+                                    VerticalAlignment="Stretch" Margin="0,10,0,10"
+                                    Background="#74D745">
+                                <Grid ColumnDefinitions="*,22*">
+                                    <Border Grid.Column="1" HorizontalAlignment="Stretch"
+                                            CornerRadius="10,10,10,10"
+                                            Background="#888888">
+                                        <TextBlock Text="{Binding pm2dot5}"
+                                                   HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                   Foreground="#FFFFFF"
+                                                   FontSize="16"
+                                                   Margin="10,0,0,0"></TextBlock>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Row="1" CornerRadius="10" MinHeight="38" MinWidth="200"
+                                    VerticalAlignment="Stretch" Margin="0,10,0,10"
+                                    Background="#D7C045">
+                                <Grid ColumnDefinitions="*,22*">
+                                    <Border Grid.Column="1" HorizontalAlignment="Stretch"
+                                            CornerRadius="10,10,10,10"
+                                            Background="#888888">
+                                        <TextBlock Text="{Binding pm10}"
+                                                   HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                   Foreground="#FFFFFF"
+                                                   FontSize="16"
+                                                   Margin="10,0,0,0"></TextBlock>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Row="2" CornerRadius="10" MinHeight="38" MinWidth="200"
+                                    VerticalAlignment="Stretch" Margin="0,10,0,10"
+                                    Background="#D74545">
+                                <Grid ColumnDefinitions="*,22*">
+                                    <Border Grid.Column="1" HorizontalAlignment="Stretch"
+                                            CornerRadius="10,10,10,10"
+                                            Background="#888888">
+                                        <TextBlock Text="{Binding temp}"
+                                                   HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                   Foreground="#FFFFFF"
+                                                   FontSize="16"
+                                                   Margin="10,0,0,0"></TextBlock>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Row="3" CornerRadius="10" MinHeight="38" MinWidth="200"
+                                    VerticalAlignment="Stretch" Margin="0,10,0,10"
+                                    Background="#456ED7">
+                                <Grid ColumnDefinitions="*,22*">
+                                    <Border Grid.Column="1" HorizontalAlignment="Stretch"
+                                            CornerRadius="10,10,10,10"
+                                            Background="#888888">
+                                        <TextBlock Text="{Binding humidity}"
+                                                   HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                   Foreground="#FFFFFF"
+                                                   FontSize="16"
+                                                   Margin="10,0,0,0"></TextBlock>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <StackPanel Grid.Column="2" Width="28"></StackPanel>
+                        <Grid Grid.Column="3" Grid.Row="1" RowDefinitions="3*,*" ShowGridLines="False">
+                            <Border Grid.Row="0" Margin="0,10,0,10" Background="#DDDDDD" CornerRadius="10">
+                                <Grid RowDefinitions="9*,2*">
+                                    <Border Grid.Row="0" Background="#888888" CornerRadius="10,10,0,10">
+                                        <TextBlock Text="{Binding city}"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="30"
+                                                   Foreground="#FFFFFF" Margin="10"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Grid Grid.Row="1" Margin="10,0,0,0" ColumnDefinitions="*,Auto" VerticalAlignment="Stretch">
+                                        <TextBlock Grid.Column="0" Text="{Binding recievingDate}"
+                                                   FontSize="16" Foreground="#474747"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                        <Button Grid.Column="1" CornerRadius="10,0,10,10" VerticalAlignment="Stretch"
+                                                Content="Set Default" Background="#D74545" Height="NaN" Margin="0"
+                                                VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                                ToolTip.Tip="Set current city as default for user"
+                                                Command="{Binding SaveUserDataCommand}"></Button>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Row="1" Background="#888888" Margin="0,10,0,10" CornerRadius="10">
+                                <DockPanel>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               DockPanel.Dock="Left"
+                                               Margin="22,0,22,0"
+                                               Text="AQI"
+                                               Foreground="#FFFFFF"></TextBlock>
+                                    <Border DockPanel.Dock="Right" CornerRadius="10"
+                                            Background="{Binding aqiBlockColor}">
+                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                   Text="{Binding aqi}"></TextBlock>
+                                    </Border>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                        <StackPanel Grid.Row="2" Grid.Column="4" Width="30" Height="30"></StackPanel>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="1"
+                        Background="#424242"
+                        Margin="0,14,0,0"
+                        CornerRadius="10"
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <TextBox CornerRadius="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                             Text="{Binding apidata}"
+                             TextWrapping="Wrap"></TextBox>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
