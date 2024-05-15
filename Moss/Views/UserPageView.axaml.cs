@@ -12,10 +12,4 @@ public partial class UserPageView : UserControl
     {
         InitializeComponent();
     }
-
-    private void TemplatedControl_OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)
-    {
-        LocalTransfer.CallUnderList = false;
-        throw new System.NotImplementedException();
-    }
 }
