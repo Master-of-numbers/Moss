@@ -22,7 +22,9 @@
                     Margin="30,30,30,15">
                 <Grid ColumnDefinitions="*,2*">
                     <Border Grid.Column="1" CornerRadius="10" Background="#424242">
-                        <TextBlock Text="AIR" FontFamily="{StaticResource JaroFont}" FontSize="120" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                        <TextBlock Text="AIR" FontFamily="{StaticResource JaroFont}" FontSize="120"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Foreground="#FFFFFF"></TextBlock>
                     </Border>
                 </Grid>
             </Border>
@@ -30,7 +32,9 @@
                     Margin="30,15,30,15">
                 <Grid ColumnDefinitions="2*,7*">
                     <Border Grid.Column="1" CornerRadius="10" Background="#424242">
-                        <TextBlock Text="POLUTION" FontFamily="{StaticResource JaroFont}" FontSize="120" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                        <TextBlock Text="POLUTION" FontFamily="{StaticResource JaroFont}" FontSize="120"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Foreground="#FFFFFF"></TextBlock>
                     </Border>
                 </Grid>
             </Border>
@@ -38,7 +42,9 @@
                     Margin="30,15,30,30">
                 <Grid ColumnDefinitions="*,8*">
                     <Border Grid.Column="1" CornerRadius="10" Background="#424242">
-                        <TextBlock Text="MONITORING" FontFamily="{StaticResource JaroFont}" FontSize="120" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                        <TextBlock Text="MONITORING" FontFamily="{StaticResource JaroFont}" FontSize="120"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Foreground="#FFFFFF"></TextBlock>
 
                     </Border>
                 </Grid>
