@@ -7,7 +7,8 @@
         d:DesignWidth="1300" d:DesignHeight="640"
         x:Class="Moss.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Height="740" Width="1300"
+        Height="820" Width="1300"
+        MinHeight="820" MinWidth="1300"
         Icon="/Assets/avalonia-logo.ico"
         Title="Moss">
 
