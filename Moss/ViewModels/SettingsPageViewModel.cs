@@ -9,6 +9,20 @@ namespace Moss.ViewModels;
 
 public class SettingsPageViewModel : FirstStepPageViewModelBase
 {
+    #region Variables
+    
+    private string? _NewUserName;
+    private bool _CanChangeUserName;
+    private string? _NewPassword;
+    private string? _notificationText;
+    private bool _notificationMessageIsVisible;
+    private string? _userToken;
+    private bool _canSetToken;
+    private bool _CanChangePassword;
+
+    private bool _CanDeleteUser;
+
+    #endregion
     public SettingsPageViewModel()
     {
         DataManager.InitializeDatabase();
@@ -41,76 +55,8 @@ public class SettingsPageViewModel : FirstStepPageViewModelBase
         ChangeUserNameCommand = ReactiveCommand.Create(SetNewUserName, canChangeUserName);
     }
 
-    private void ActivateDeleteButton()
-    {
-        CanDeleteUser = true;
-    }
-
-    private void DeactivateDeleteButton()
-    {
-        CanDeleteUser = false;
-    }
-    private void DeleteUser()
-    {
-        DataManager.DeleteUser(LocalTransfer.UserID);
-        NavigateAuthPage();
-        DeactivateDeleteButton();
-    }
-    private void SetUserToken()
-    {
-        DataManager.SetUserToken(LocalTransfer.UserID, UserToken);
-        LocalTransfer.UserToken = UserToken;
-        Notification(3000,"Token Setted!");
-        UserToken = null;
-    }
-    private async void Notification(int ms_time, string text)
-    {
-        NotificationText = text;
-        NotificationIsVisible = true;
-        await Task.Delay(ms_time);
-        NotificationIsVisible = false;
-    }
-    private void OpenGetTokenInBrowser()
-    {
-        Process.Start(new ProcessStartInfo("https://aqicn.org/data-platform/token/") { UseShellExecute = true });
-    }
-    private void OpenAqicnInBrowser()
-    {
-        Process.Start(new ProcessStartInfo("https://aqicn.org/") { UseShellExecute = true });
-    }
-    private void SetNewPassword()
-    {
-        DataManager.ChangePassword(LocalTransfer.UserID, NewPassword);
-        Notification(4000,"Password Changed!");
-        NewPassword = null;
-    }
-    private void SetNewUserName()
-    {
-        DataManager.ChangeUserName(LocalTransfer.UserID, NewUserName);
-        Notification(4000, "UserName Changed!");
-        NewUserName = null;
-    }
-    public override bool CanNavigateSettings
-    {
-        get => false;
-        set => CanNavigateSettings = false;
-    }
-    public override bool CanNavigateAuthPage
-    {
-        get => true;
-        set => CanNavigateAuthPage = true;
-    }
-    public override bool CanNavigateUserPage
-    {
-        get => true;
-        set => CanNavigateSettings = true;
-    }
-
-    private string? _NewPassword;
-    private string? _notificationText;
-    private bool _notificationMessageIsVisible;
-    private string? _userToken;
-    private bool _canSetToken;
+    #region Properties
+    
     public bool CanSetToken
     {
         get => _canSetToken;
@@ -136,13 +82,45 @@ public class SettingsPageViewModel : FirstStepPageViewModelBase
         get => _NewPassword;
         set => this.RaiseAndSetIfChanged(ref _NewPassword, value);
     }
-    private string? _NewUserName;
-
     public string? NewUserName
     {
         get => _NewUserName;
         set => this.RaiseAndSetIfChanged(ref _NewUserName, value);
     }
+    private bool CanChangePassword
+    {
+        get => _CanChangePassword;
+        set => this.RaiseAndSetIfChanged(ref _CanChangePassword, value);
+    }
+    private bool CanChangeUserName
+    {
+        get => _CanChangeUserName;
+        set => this.RaiseAndSetIfChanged(ref _CanChangeUserName, value);
+    }
+    private bool CanDeleteUser
+    {
+        get => _CanDeleteUser;
+        set => this.RaiseAndSetIfChanged(ref _CanDeleteUser, value);
+    }
+    public override bool CanNavigateSettings
+    {
+        get => false;
+        set => CanNavigateSettings = false;
+    }
+    public override bool CanNavigateAuthPage
+    {
+        get => true;
+        set => CanNavigateAuthPage = true;
+    }
+    public override bool CanNavigateUserPage
+    {
+        get => true;
+        set => CanNavigateSettings = true;
+    }
+
+    #endregion
+
+    #region Interfaces
     public ICommand NavigateUserPageCommand { get; set; }
     public ICommand GetAPITokenCommand { get; set; }
     public ICommand GoToAqicnCommand { get; set; }
@@ -153,49 +131,80 @@ public class SettingsPageViewModel : FirstStepPageViewModelBase
     public ICommand DeleteUserCommand { get; set; }
     public ICommand SetUserTokenCommand { get; set; }
 
-    private bool _CanChangePassword;
-    private bool CanChangePassword
-    {
-        get => _CanChangePassword;
-        set => this.RaiseAndSetIfChanged(ref _CanChangePassword, value);
-    }
+    #endregion
 
-    private bool _CanChangeUserName;
+    #region Methods
 
-    private bool CanChangeUserName
-    {
-        get => _CanChangeUserName;
-        set => this.RaiseAndSetIfChanged(ref _CanChangeUserName, value);
-    }
-
-    private bool _CanDeleteUser;
-
-    private bool CanDeleteUser
-    {
-        get => _CanDeleteUser;
-        set => this.RaiseAndSetIfChanged(ref _CanDeleteUser, value);
-    }
-
+    private void ActivateDeleteButton()
+        {
+            CanDeleteUser = true;
+        }
+    private void DeactivateDeleteButton()
+        {
+            CanDeleteUser = false;
+        }
+    private void DeleteUser()
+        {
+            DataManager.DeleteUser(LocalTransfer.UserID);
+            NavigateAuthPage();
+            DeactivateDeleteButton();
+        }
+    private void SetUserToken()
+        {
+            DataManager.SetUserToken(LocalTransfer.UserID, UserToken);
+            LocalTransfer.UserToken = UserToken;
+            Notification(3000,"Token Setted!");
+            UserToken = null;
+        }
+    private async void Notification(int ms_time, string text)
+        {
+            NotificationText = text;
+            NotificationIsVisible = true;
+            await Task.Delay(ms_time);
+            NotificationIsVisible = false;
+        }
+    private void OpenGetTokenInBrowser()
+        {
+            Process.Start(new ProcessStartInfo("https://aqicn.org/data-platform/token/") { UseShellExecute = true });
+        }
+    private void OpenAqicnInBrowser()
+        {
+            Process.Start(new ProcessStartInfo("https://aqicn.org/") { UseShellExecute = true });
+        }
+    private void SetNewPassword()
+        {
+            DataManager.ChangePassword(LocalTransfer.UserID, NewPassword);
+            Notification(4000,"Password Changed!");
+            NewPassword = null;
+        }
+    private void SetNewUserName()
+        {
+            DataManager.ChangeUserName(LocalTransfer.UserID, NewUserName);
+            Notification(4000, "UserName Changed!");
+            NewUserName = null;
+        }
     private void UpdateCanChangePassword()
-    {
-        CanChangePassword = !string.IsNullOrEmpty(NewPassword) && NewPassword.Length >= 8;
-    }
+        {
+            CanChangePassword = !string.IsNullOrEmpty(NewPassword) && NewPassword.Length >= 8;
+        }
     private void UpdateCanChangeUserName()
-    {
-        CanChangeUserName = !string.IsNullOrEmpty(NewUserName) && !DataManager.UsernameExists(NewUserName);
-    }
+        {
+            CanChangeUserName = !string.IsNullOrEmpty(NewUserName) && !DataManager.UsernameExists(NewUserName);
+        }
     private void UpdateCanSetToken()
-    {
-        CanSetToken = !string.IsNullOrEmpty(UserToken);
-    }
+        {
+            CanSetToken = !string.IsNullOrEmpty(UserToken);
+        }
     private void NavigateUserPage()
-    {
-        LocalTransfer.PageFromList = 1;
-        LocalTransfer.RaiseStaticEvent();
-    }
+        {
+            LocalTransfer.PageFromList = 1;
+            LocalTransfer.RaiseStaticEvent();
+        }
     private void NavigateAuthPage()
-    {
-        LocalTransfer.PageFromList = 0;
-        LocalTransfer.RaiseStaticEvent();
-    }
+        {
+            LocalTransfer.PageFromList = 0;
+            LocalTransfer.RaiseStaticEvent();
+        }
+
+    #endregion
 }

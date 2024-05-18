@@ -7,6 +7,13 @@ namespace Moss.ViewModels;
 
 public class AuthRegistrationPageViewModel : AuthPageViewModelBase
 {
+    #region Variables
+
+    public string? _UserName, _Password;
+    private bool _CanNavigateUserPage;
+
+    #endregion
+
     public AuthRegistrationPageViewModel()
     {
         this.WhenAnyValue(x => x.UserName, x => x.Password)
@@ -14,7 +21,9 @@ public class AuthRegistrationPageViewModel : AuthPageViewModelBase
         var canNavUserPage = this.WhenAnyValue(x => x.CanNavigateUserPage);
         RegNavigateUserPageCommand = ReactiveCommand.Create(NavigateUserPage, canNavUserPage);
     }
-    public string? _UserName, _Password;
+
+    #region Properties
+
     public string? UserName
     {
         get => _UserName;
@@ -32,18 +41,29 @@ public class AuthRegistrationPageViewModel : AuthPageViewModelBase
         get => true;
         set => CanNavigateLogin = value;
     }
+
     public override bool CanNavigateRegistration
     {
         get => false;
         set => CanNavigateRegistration = value;
     }
 
-    private bool _CanNavigateUserPage;
     public override bool CanNavigateUserPage
     {
         get => _CanNavigateUserPage;
         set => this.RaiseAndSetIfChanged(ref _CanNavigateUserPage, value);
     }
+
+    #endregion
+
+    #region Interfaces
+
+    public ICommand RegNavigateUserPageCommand { get; }
+
+    #endregion
+
+    #region Methods
+
     public void NavigateUserPage()
     {
         if (!DataManager.InsertUser(_UserName, _Password))
@@ -58,7 +78,7 @@ public class AuthRegistrationPageViewModel : AuthPageViewModelBase
             LocalTransfer.RaiseStaticEvent();
         }
     }
-    public ICommand RegNavigateUserPageCommand { get; }
+
     private void UpdateCanNavigateUserPage()
     {
         CanNavigateUserPage=
@@ -66,4 +86,6 @@ public class AuthRegistrationPageViewModel : AuthPageViewModelBase
             && !string.IsNullOrEmpty(_Password)
             && _Password.Length >= 8;
     }
+
+    #endregion
 }

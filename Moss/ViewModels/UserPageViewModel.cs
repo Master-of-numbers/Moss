@@ -16,10 +16,10 @@ using ReactiveUI;
 using SkiaSharp;
 
 namespace Moss.ViewModels;
-
+// TODO меню операції сортування, фільтрації, пошуку за декількома значеннями об’єктів
 public class UserPageViewModel : FirstStepPageViewModelBase
 {
-    #region variables
+    #region Variables
 
     private string? _city;
     private string? _pm2dot5;
@@ -62,8 +62,9 @@ public class UserPageViewModel : FirstStepPageViewModelBase
         this.WhenAnyValue(x => x.aqi).Subscribe(_ => UpdateAQIBlockColor());
         this.WhenAnyValue(x => x.SearchCity).Subscribe(_ => UpdateSearchCity());
     }
+    //d448c4bac6e20b474fb870c912276d4263bc2664
 
-    #region properties
+    #region Properties
     public ISeries[] Series { get; set; }
     public Axis[] XAxes { get; set; }
     public Axis[] YAxes { get; set; }
@@ -156,14 +157,14 @@ public class UserPageViewModel : FirstStepPageViewModelBase
     }
     #endregion
 
-    #region interfaces
+    #region Interfaces
     public ICommand NavigateSettingsCommand { get; }
     public ICommand ParseApiDataCommand { get; }
     public ICommand LogOutCommand { get; }
     public ICommand SaveUserDataCommand { get; }
     #endregion
 
-    #region methods
+    #region Methods
     #region async
     private async void Notification(int ms_time, string text)
     {

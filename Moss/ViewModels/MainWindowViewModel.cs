@@ -6,6 +6,17 @@ namespace Moss.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    #region Variables
+
+    private readonly FirstStepPageViewModelBase[] Pages =
+        {
+            new AuthPageViewModel(),
+            new UserPageViewModel(),
+            new SettingsPageViewModel()
+        };
+    private FirstStepPageViewModelBase _CurrentPage;
+    
+    #endregion
     public MainWindowViewModel()
     {
         LocalTransfer.UserID = 1;
@@ -23,6 +34,21 @@ public class MainWindowViewModel : ViewModelBase
         NavigatePreviousCommand = ReactiveCommand.Create(NavigatePrevious);
         NavigateSettingsCommand = ReactiveCommand.Create(NavigateSettings);
     }
+
+    #region Interfaces
+    public FirstStepPageViewModelBase CurrentPage
+    {
+        get => _CurrentPage;
+        set => this.RaiseAndSetIfChanged(ref _CurrentPage, value);
+    }
+    public ICommand NavigateNextCommand { get; }
+    public ICommand NavigatePreviousCommand { get; }
+    public ICommand NavigateSettingsCommand { get; }
+
+    #endregion
+
+    #region Methods
+
     private void OnStaticEventChanged()
     {
         // Handle the event when the value in StaticClass is changed
@@ -40,28 +66,10 @@ public class MainWindowViewModel : ViewModelBase
         }
         // For example, you can invoke a method when the static event is raised
     }
-    
-    private readonly FirstStepPageViewModelBase[] Pages =
-    {
-        new AuthPageViewModel(),
-        new UserPageViewModel(),
-        new SettingsPageViewModel()
-    };
-    private FirstStepPageViewModelBase _CurrentPage;
-    public FirstStepPageViewModelBase CurrentPage
-    {
-        get => _CurrentPage;
-        set => this.RaiseAndSetIfChanged(ref _CurrentPage, value);
-    }
-    public ICommand NavigateNextCommand { get; }
-    public ICommand NavigatePreviousCommand { get; }
-    public ICommand NavigateSettingsCommand { get; }
-
     public void NavigateSettings()
     {
         CurrentPage = Pages[2];
     }
-
     public void NavigateAuthPage()
     {
         CurrentPage = Pages[0];
@@ -81,4 +89,6 @@ public class MainWindowViewModel : ViewModelBase
         var index = Pages.IndexOf(CurrentPage) - 1;
         CurrentPage = Pages[index];
     }
+
+    #endregion
 }

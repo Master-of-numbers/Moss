@@ -10,6 +10,12 @@ namespace Moss.ViewModels;
 
 public class AuthLoginPageViewModel : AuthPageViewModelBase
 {
+    #region Variables
+
+    public string? _UserName, _Password, _UsersInBase;
+    private bool _CanNavigateUserPage = true;
+
+    #endregion
     public AuthLoginPageViewModel()
     {
         UserName = "";
@@ -19,54 +25,69 @@ public class AuthLoginPageViewModel : AuthPageViewModelBase
         LoginNavigateSettings = ReactiveCommand.Create(NavigateUserPage, canNavUserPage);
         ShowUsersInBaseCommand = ReactiveCommand.Create(ShowUsersInBase, canNavUserPage);
     }
-    public string? _UserName, _Password;
-    public string? _UsersInBase;
-    public ICommand ShowUsersInBaseCommand { get; }
-    private void ShowUsersInBase()
-    {
-        UsersInBase = DataManager.DisplayUsers();
-    }
+
+    #region Properties
+
     public string? UsersInBase
     {
         get => _UsersInBase;
         set => this.RaiseAndSetIfChanged(ref _UsersInBase, value);
     }
+
     public string? UserName
     {
         get => _UserName;
         set => this.RaiseAndSetIfChanged(ref _UserName, value);
     }
-    public ICommand LoginNavigateSettings { get; }
+
     public string? Password
     {
         get => _Password;
         set => this.RaiseAndSetIfChanged(ref _Password, value);
     }
+
     public override bool CanNavigateLogin
     {
         get => false;
         set => CanNavigateLogin = value;
     }
+
     public override bool CanNavigateRegistration
     {
         get => true;
         set => CanNavigateRegistration = value;
     }
 
-    private bool _CanNavigateUserPage = true;
-
     public override bool CanNavigateUserPage
     {
         get => _CanNavigateUserPage;
         set => this.RaiseAndSetIfChanged(ref _CanNavigateUserPage, value);
     }
-    
+
+    #endregion
+
+    #region Interfaces
+
+    public ICommand ShowUsersInBaseCommand { get; }
+
+    public ICommand LoginNavigateSettings { get; }
+
+    #endregion
+
+    #region Methods
+
+    private void ShowUsersInBase()
+    {
+        UsersInBase = DataManager.DisplayUsers();
+    }
+
     private void UpdateCanNavigateUserPage()
     {
         CanNavigateUserPage =
             !string.IsNullOrEmpty(_UserName)
             && !string.IsNullOrEmpty(_Password);
     }
+
     private void NavigateUserPage()
     {
         if (DataManager.UsernameExists(_UserName) && DataManager.PasswordIsValid(_UserName, _Password))
@@ -76,4 +97,6 @@ public class AuthLoginPageViewModel : AuthPageViewModelBase
             LocalTransfer.RaiseStaticEvent();
         }
     }
+
+    #endregion
 }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Moss.ViewModels;
 public static class DataManager
@@ -77,7 +76,7 @@ public static class DataManager
         {
             Debug.WriteLine("User Adding error");
         }
-        LocalTransfer.UserID = GetUserID(userName);
+        LocalTransfer.UserID = GetUserId(userName);
         return true;
         /*
         SQLiteCommand command = new SQLiteCommand(query, connection);
@@ -108,7 +107,7 @@ public static class DataManager
         var command = new SQLiteCommand(query, db);
         command.Parameters.AddWithValue("@userName", userName);
         command.Parameters.AddWithValue("@password", password);
-        LocalTransfer.UserID = GetUserID(userName);
+        LocalTransfer.UserID = GetUserId(userName);
         return Convert.ToBoolean(command.ExecuteScalar());
     }
     public static bool CheckUserToken(int userId)
@@ -118,7 +117,7 @@ public static class DataManager
         command.Parameters.AddWithValue("@userId", userId);
         return Convert.ToBoolean(command.ExecuteScalar());
     }
-    public static int GetUserID(string userName)
+    public static int GetUserId(string userName)
     {
         string query = "SELECT UserId FROM users WHERE UserName = @userName";
         var command = new SQLiteCommand(query, db);
@@ -136,34 +135,34 @@ public static class DataManager
         reader.Read();
         return String.Format($"{reader["UserData"]}");
     }
-    public static bool ChangePassword(int UserID, string newPassword)
+    public static bool ChangePassword(int UserId, string newPassword)
     {
         string query = "UPDATE users SET Password = @password WHERE UserId = @userID";
         var command = new SQLiteCommand(query, db);
-        command.Parameters.AddWithValue("@userID", UserID);
+        command.Parameters.AddWithValue("@userID", UserId);
         command.Parameters.AddWithValue("@password", newPassword);
         return Convert.ToBoolean(command.ExecuteScalar());
     }
-    public static bool DeleteUser(int UserID)
+    public static bool DeleteUser(int UserId)
     {
         string query = "DELETE FROM users WHERE UserId = @userID";
         var command = new SQLiteCommand(query, db);
-        command.Parameters.AddWithValue("@userID", UserID);
+        command.Parameters.AddWithValue("@userID", UserId);
         return Convert.ToBoolean(command.ExecuteScalar());
     }
-    public static bool InsertUserData(int UserID, string userData)
+    public static bool InsertUserData(int UserId, string userData)
     {
         string query = "UPDATE users SET UserData = @userData WHERE UserId = @userID";
         var command = new SQLiteCommand(query, db);
-        command.Parameters.AddWithValue("@userID", UserID);
+        command.Parameters.AddWithValue("@userID", UserId);
         command.Parameters.AddWithValue("@userData", userData);
         return Convert.ToBoolean(command.ExecuteScalar());
     }
-    public static bool SetUserToken(int UserID, string userToken)
+    public static bool SetUserToken(int UserId, string userToken)
     {
         string query = "UPDATE users SET UserToken = @userToken WHERE UserId = @userID";
         var command = new SQLiteCommand(query, db);
-        command.Parameters.AddWithValue("@userID", UserID);
+        command.Parameters.AddWithValue("@userID", UserId);
         command.Parameters.AddWithValue("@userToken", userToken);
         return Convert.ToBoolean(command.ExecuteScalar());
     }
@@ -176,11 +175,11 @@ public static class DataManager
         reader.Read();
         return Convert.ToString(reader["UserToken"]);
     }
-    public static bool ChangeUserName(int UserID, string newUserName)
+    public static bool ChangeUserName(int UserId, string newUserName)
     {
         string query = "UPDATE users SET UserName = @userName WHERE UserId = @userID";
         var command = new SQLiteCommand(query, db);
-        command.Parameters.AddWithValue("@userID", UserID);
+        command.Parameters.AddWithValue("@userID", UserId);
         command.Parameters.AddWithValue("@userName", newUserName);
         return Convert.ToBoolean(command.ExecuteScalar());
     }
