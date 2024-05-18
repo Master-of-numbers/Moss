@@ -35,7 +35,7 @@ public class UserPageViewModel : FirstStepPageViewModelBase
     private string? _notificationText;
     private bool _notificationMessageIsVisible;
     private bool _tokenExists;
-    public ObservableCollection<ObservableValue> MainChartValue = new ObservableCollection<ObservableValue>();
+    public ObservableCollection<ObservableValue> PM10ChartValue = new ObservableCollection<ObservableValue>();
     public ObservableCollection<ObservableValue> PM2dot5ChartValue = new ObservableCollection<ObservableValue>();
 
     #endregion
@@ -178,7 +178,6 @@ public class UserPageViewModel : FirstStepPageViewModelBase
         try
         {
             string str = null;
-            foreach (var VARIABLE in Cityes) if (VARIABLE.Equals(SearchCity)) return;
             using (WebClient client = new WebClient())
             {
                 string addres = $"https://api.waqi.info/search/?token={LocalTransfer.UserToken}&keyword={SearchCity}";
@@ -194,7 +193,6 @@ public class UserPageViewModel : FirstStepPageViewModelBase
                 {
                     string name = dataItem["station"]["name"].ToString();
                     stationNames.Add(ProccesCityName(name));
-                    //stationNames.Add(name);
                 }
                 Cityes.Clear();
                 Cityes.AddRange(stationNames);
@@ -223,7 +221,7 @@ public class UserPageViewModel : FirstStepPageViewModelBase
             apidata = str;
             JsonNode obj = JsonObject.Parse(str);
             JsonObject jObj = (JsonObject)obj;
-            MainChartValue.Clear();
+            PM10ChartValue.Clear();
             PM2dot5ChartValue.Clear();
             if (obj["status"].ToString().Equals("ok"))
             {
@@ -264,12 +262,12 @@ public class UserPageViewModel : FirstStepPageViewModelBase
                         if (forecastDailyOBJ.ContainsKey("pm10"))
                         {
                             var pm10Array = jsonObJ.data.forecast.daily.pm10;
-                            MainChartValue.Clear();
+                            PM10ChartValue.Clear();
                             foreach (var item in pm10Array)
                             {
                                 if (item.ContainsKey("avg"))
                                 {
-                                    MainChartValue.Add(new ObservableValue(Convert.ToDouble(item.avg)));
+                                    PM10ChartValue.Add(new ObservableValue(Convert.ToDouble(item.avg)));
                                 }
                             }
                         }
@@ -317,7 +315,7 @@ public class UserPageViewModel : FirstStepPageViewModelBase
         {
             new LineSeries<ObservableValue>()
             {
-                Values = MainChartValue,
+                Values = PM10ChartValue,
                 Fill = new SolidColorPaint(new SKColor(215, 192, 69, 90)),
                 Stroke = new SolidColorPaint(new SKColor(215, 192, 69)) {StrokeThickness = 3},
                 GeometryStroke = new SolidColorPaint(new SKColor(215, 192, 69)) {StrokeThickness = 3}
@@ -370,7 +368,7 @@ public class UserPageViewModel : FirstStepPageViewModelBase
         aqi = null;
         recievingDate = null;
         SearchCity = null;
-        MainChartValue.Clear();
+        PM10ChartValue.Clear();
         PM2dot5ChartValue.Clear();
     }
     private void UpdateSearchCity()

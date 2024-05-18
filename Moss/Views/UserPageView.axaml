@@ -41,11 +41,10 @@
                 <Grid Grid.Column="0" Margin="0,0,14,0"
                       ColumnDefinitions="7*,3*">
                     <AutoCompleteBox HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                     Grid.Column="0"
-                                     Margin="28,0,14,0"
+                                     Grid.Column="0" Margin="28,0,14,0"
                                      Height="40" Background="#424242"
                                      Watermark="search city..."
-                                     FilterMode="Contains"
+                                     FilterMode="ContainsOrdinal"
                                      Text="{Binding SearchCity}"
                                      ItemsSource="{Binding Cityes}"
                                      MinimumPrefixLength="2" IsEnabled="{Binding TokenExists}"
