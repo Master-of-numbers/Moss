@@ -16,7 +16,6 @@ using ReactiveUI;
 using SkiaSharp;
 
 namespace Moss.ViewModels;
-// TODO меню операції сортування, фільтрації, пошуку за декількома значеннями об’єктів
 public class UserPageViewModel : FirstStepPageViewModelBase
 {
     #region Variables
