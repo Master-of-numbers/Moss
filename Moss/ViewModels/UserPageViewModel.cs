@@ -41,7 +41,6 @@ public class UserPageViewModel : FirstStepPageViewModelBase
     #endregion
     public UserPageViewModel()
     {
-        //d448c4bac6e20b474fb870c912276d4263bc2664
         Initialize();
         chartRowColor = "#D9D9D9";
         aqiBlockColor = "#D9D9D9";
@@ -62,7 +61,6 @@ public class UserPageViewModel : FirstStepPageViewModelBase
         this.WhenAnyValue(x => x.aqi).Subscribe(_ => UpdateAQIBlockColor());
         this.WhenAnyValue(x => x.SearchCity).Subscribe(_ => UpdateSearchCity());
     }
-    //d448c4bac6e20b474fb870c912276d4263bc2664
 
     #region Properties
     public ISeries[] Series { get; set; }

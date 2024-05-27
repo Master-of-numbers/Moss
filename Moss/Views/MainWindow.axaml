@@ -23,8 +23,7 @@
 
         <StackPanel Width="400" Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="5"
                     HorizontalAlignment="Left">
-            <!--<Button Command="{Binding NavigatePreviousCommand}" Content="Registration" />
-            <Button Command="{Binding NavigateNextCommand}" Content="Next" />-->
+            
         </StackPanel>
     </Grid>
 
