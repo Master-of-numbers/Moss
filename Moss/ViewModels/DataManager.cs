@@ -9,10 +9,12 @@ namespace Moss.ViewModels;
 public static class DataManager
 {
     static SQLiteConnection db = new SQLiteConnection("Data Source=localDB.sqlite;Version=3;");
+    private static bool newDb = false;
     public static void InitializeDatabase()
     {
-        if (File.Exists("localDB.sqlite"))
+        if (!File.Exists("localDB.sqlite"))
         {
+            newDb = true;
             SQLiteConnection.CreateFile("localDB.sqlite");
             Debug.WriteLine("Database created");
         }
@@ -36,18 +38,22 @@ public static class DataManager
         {
             Debug.WriteLine("Table not created");
         }
-        string query = "INSERT INTO Users (UserName, Password) VALUES (@UserName, @Password)";
-        var insertUserDataCommand = new SQLiteCommand(query, db);
-        insertUserDataCommand.Parameters.AddWithValue("@UserName", "begin");
-        insertUserDataCommand.Parameters.AddWithValue("@Password", "motherland");
-        try
+
+        if (newDb)
         {
-            insertUserDataCommand.ExecuteNonQuery();
-            Debug.WriteLine("Root user Added");
-        }
-        catch (Exception e)
-        {
-            Debug.WriteLine("Root user adding error");
+            string query = "INSERT INTO Users (UserName, Password) VALUES (@UserName, @Password)";
+            var insertUserDataCommand = new SQLiteCommand(query, db);
+            insertUserDataCommand.Parameters.AddWithValue("@UserName", "begin");
+            insertUserDataCommand.Parameters.AddWithValue("@Password", "motherland");
+            try
+            {
+                insertUserDataCommand.ExecuteNonQuery();
+                Debug.WriteLine("Root user Added");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Root user adding error");
+            }
         }
     }
 

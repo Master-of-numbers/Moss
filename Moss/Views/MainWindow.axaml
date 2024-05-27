@@ -9,7 +9,7 @@
         x:DataType="vm:MainWindowViewModel"
         Height="820" Width="1300"
         MinHeight="820" MinWidth="1300"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/logo_moss.ico"
         Title="Moss">
 
     <Design.DataContext>

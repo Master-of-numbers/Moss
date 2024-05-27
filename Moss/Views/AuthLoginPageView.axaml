@@ -39,7 +39,7 @@
             <TextBlock VerticalAlignment="Center"
                        FontSize="16"
                        FontWeight="SemiBold"
-                       Text="Login"
+                       Text="LogIn"
                        TextAlignment="Center"
                        TextWrapping="Wrap"
                        Foreground="#D9D9D9"/>
@@ -72,12 +72,12 @@
                 Foreground="#D9D9D9"
                 Width="100" Height="36"
                 Command="{Binding LoginNavigateSettings}"
-                Content="To Heaven"/>
-        <Button Name="DebugButton"
+                Content="Enter"/>
+        <!--<Button Name="DebugButton"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 Content="dbData"
                 Command="{Binding ShowUsersInBaseCommand}"/>
-        <TextBox Text="{Binding UsersInBase}"/>
+        <TextBox Text="{Binding UsersInBase}"/>-->
     </StackPanel>
 </UserControl>

@@ -175,7 +175,7 @@
                                     Background="#888888"
                                     Margin="0,0,15,15"
                                     VerticalAlignment="Top">
-                                <TextBlock Text="API Tocken:"
+                                <TextBlock Text="API Token:"
                                            VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
                             </Border>
                             <TextBox Grid.Column="1"

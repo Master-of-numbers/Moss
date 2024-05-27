@@ -32,11 +32,11 @@
     </UserControl.Styles>
     <Grid ColumnDefinitions="*" RowDefinitions="Auto,*">
         <Border
-                Height="90"
-                Grid.Column="0" Grid.Row="0"
-                CornerRadius="0,0,10,10"
-                Background="#CF2929"
-                Margin="0">
+            Height="90"
+            Grid.Column="0" Grid.Row="0"
+            CornerRadius="0,0,10,10"
+            Background="#CF2929"
+            Margin="0">
             <Grid ColumnDefinitions="*,*,*" ShowGridLines="False">
                 <Grid Grid.Column="0" Margin="0,0,14,0"
                       ColumnDefinitions="7*,3*">
@@ -48,7 +48,7 @@
                                      Text="{Binding SearchCity}"
                                      ItemsSource="{Binding Cityes}"
                                      MinimumPrefixLength="2" IsEnabled="{Binding TokenExists}"
-                                     ></AutoCompleteBox>
+                    ></AutoCompleteBox>
                     <Button HorizontalAlignment="Stretch" VerticalAlignment="Center"
                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                             Grid.Column="1"
@@ -130,11 +130,11 @@
                                         ZoomMode="Y"
                                         XAxes="{Binding XAxes}"
                                         YAxes="{Binding YAxes}"
-                                        >
+                    >
                     </lvc:CartesianChart>
                 </Grid>
             </Border>
-            <Grid Grid.Column="1" RowDefinitions="11*, 5*" 
+            <Grid Grid.Column="1" RowDefinitions="11*, 6*" 
                   Margin="14,28,28,28" ShowGridLines="False"
                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Border Grid.Row="0"
@@ -255,9 +255,100 @@
                         Margin="0,14,0,0"
                         CornerRadius="10"
                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <TextBox CornerRadius="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                             Text="{Binding apidata}"
-                             TextWrapping="Wrap"></TextBox>
+                    <Grid ShowGridLines="False" Margin="28,30,28,30"
+                          ColumnDefinitions="*,*,*">
+                        <Border Grid.Column="0" CornerRadius="10" Background="#888888" Margin="0,0,14,0">
+                            <Grid ShowGridLines="False" RowDefinitions="Auto,*,*,*" Margin="0,0,0,5">
+                                <Border Grid.Row="0" Background="#D9D9D9"
+                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                        Height="40" CornerRadius="10">
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               Text="Sort search list" Foreground="#424242"
+                                               FontSize="16"></TextBlock>
+                                </Border>
+                                <RadioButton Grid.Row="1" GroupName="sorting" Content="None"
+                                             Margin="10,0,0,0"
+                                             Foreground="#FFFFFF"
+                                             Command="{Binding SortNoneModeCommand}"></RadioButton>
+                                <RadioButton Grid.Row="2" GroupName="sorting" Content="By Countries"
+                                             Margin="10,0,0,0"
+                                             Foreground="#FFFFFF"
+                                             Command="{Binding SortByCountryModeCommand}"></RadioButton>
+                                <RadioButton Grid.Row="3" GroupName="sorting" Content="By String Length"
+                                             Margin="10,0,0,0"
+                                             Foreground="#FFFFFF"
+                                             Command="{Binding SortByStringLengthModeCommand}"></RadioButton>
+                            </Grid>                        
+                        </Border>
+                        <Border Grid.Column="1" CornerRadius="10" Background="#888888" Margin="14,0,14,0">
+                            <Grid ShowGridLines="False" RowDefinitions="Auto,*,*">
+                                <Border Grid.Row="0" Background="#D9D9D9"
+                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                        Height="40" CornerRadius="10">
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               Text="Filter search list" Foreground="#424242"
+                                               FontSize="16"></TextBlock>
+                                </Border>
+                                <RadioButton Grid.Row="1" GroupName="filtering" Content="None"
+                                             Margin="10,0,0,0"
+                                             Foreground="#FFFFFF"
+                                             Command="{Binding FilterNoneModeCommand}"></RadioButton>
+                                <Grid Grid.Row="2" ColumnDefinitions="*,*">
+                                    <RadioButton Grid.Column="0" GroupName="filtering" Content="By Country"
+                                                 Margin="10,0,0,0"
+                                                 Foreground="#FFFFFF"
+                                                 Command="{Binding FilterByCountryModeCommand}">
+                                    </RadioButton>
+                                    <TextBox Grid.Column="1" CornerRadius="10" Background="#D9D9D9"
+                                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                             VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                             Margin="10,0,0,0"
+                                             Watermark="Name"
+                                             Text="{Binding FilterCountry}"></TextBox>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <Grid Grid.Column="2" ShowGridLines="False" RowDefinitions="Auto,*"
+                              Margin="14,0,0,0">
+                            <Border Grid.Row="0" Background="#D9D9D9"
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                    Height="40" CornerRadius="10">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                                           Text="Min data receiving date" Foreground="#424242"
+                                           FontSize="16"></TextBlock>
+                            </Border>
+                            <Border Grid.Row="1" CornerRadius="10" Background="#888888" Margin="0,10,0,0">
+                                <Grid RowDefinitions="*,*">
+                                    <Grid Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                          Margin="0,0,0,10" ColumnDefinitions="*">
+                                        <MaskedTextBox Grid.Column="0" CornerRadius="10"
+                                                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                                       VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                                       Mask="0000-00-00" Background="#D9D9D9"
+                                                       Text="{Binding MinDataDate}"
+                                        ></MaskedTextBox>
+                                    </Grid>
+                                    <Grid Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                          ColumnDefinitions="Auto,*,*">
+                                        <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                   Text="Active:" FontSize="16" Foreground="#FFFFFF"
+                                                   Margin="10,0,10,0"></TextBlock>
+                                        <RadioButton Grid.Column="1" GroupName="searching" Content="Yes"
+                                                     Margin="10,0,0,0"
+                                                     Foreground="#FFFFFF"
+                                                     Command="{Binding MinDataActivateCommand}"></RadioButton>
+                                        <RadioButton Grid.Column="2" GroupName="searching" Content="No"
+                                                     Margin="10,0,0,0"
+                                                     Foreground="#FFFFFF"
+                                                     Command="{Binding MinDataDeactivateCommand}"></RadioButton>                        
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <!--sort by countries, length,
+                        filtering by country/state,
+                        searching-->
+                    </Grid>
                 </Border>
             </Grid>
         </Grid>

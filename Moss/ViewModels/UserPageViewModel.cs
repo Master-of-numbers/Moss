@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -16,11 +17,13 @@ using ReactiveUI;
 using SkiaSharp;
 
 namespace Moss.ViewModels;
-// TODO меню операції сортування, фільтрації, пошуку за декількома значеннями об’єктів
 public class UserPageViewModel : FirstStepPageViewModelBase
 {
     #region Variables
 
+    private int _sortingMode;
+    private bool _filteringIsActive;
+    private bool _minDataIsActive;
     private string? _city;
     private string? _pm2dot5;
     private string? _pm10;
@@ -33,6 +36,8 @@ public class UserPageViewModel : FirstStepPageViewModelBase
     private string? _chartRowColor;
     private string? _recievingDate;
     private string? _notificationText;
+    private string? _filterCountry;
+    private string? _minDataDate;
     private bool _notificationMessageIsVisible;
     private bool _tokenExists;
     public ObservableCollection<ObservableValue> PM10ChartValue = new ObservableCollection<ObservableValue>();
@@ -41,7 +46,7 @@ public class UserPageViewModel : FirstStepPageViewModelBase
     #endregion
     public UserPageViewModel()
     {
-        //d448c4bac6e20b474fb870c912276d4263bc2664
+        
         Initialize();
         chartRowColor = "#D9D9D9";
         aqiBlockColor = "#D9D9D9";
@@ -57,12 +62,22 @@ public class UserPageViewModel : FirstStepPageViewModelBase
         ParseApiDataCommand = ReactiveCommand.Create(ParseCityDataAsync, canParseApiData);
         SaveUserDataCommand = ReactiveCommand.Create(SetDefaultCity, canParseApiData);
 
+        SortNoneModeCommand = ReactiveCommand.Create(DisableSorting);
+        SortByCountryModeCommand = ReactiveCommand.Create(SetSortingByCountry);
+        SortByStringLengthModeCommand = ReactiveCommand.Create(SetSortingByLength);
+
+        FilterNoneModeCommand = ReactiveCommand.Create(DisableFiltering);
+        FilterByCountryModeCommand = ReactiveCommand.Create(EnableFiltering);
+
+        MinDataActivateCommand = ReactiveCommand.Create(ActivateMinData);
+        MinDataDeactivateCommand = ReactiveCommand.Create(DeactivateMinData);
+
         Cityes = new AvaloniaList<string>();
 
         this.WhenAnyValue(x => x.aqi).Subscribe(_ => UpdateAQIBlockColor());
         this.WhenAnyValue(x => x.SearchCity).Subscribe(_ => UpdateSearchCity());
     }
-    //d448c4bac6e20b474fb870c912276d4263bc2664
+    
 
     #region Properties
     public ISeries[] Series { get; set; }
@@ -70,6 +85,17 @@ public class UserPageViewModel : FirstStepPageViewModelBase
     public Axis[] YAxes { get; set; }
     public AvaloniaList<string> Cityes { get; set; }
     private AvaloniaList<string> stationNames { get; set; }
+
+    public string? MinDataDate
+    {
+        get => _minDataDate;
+        set => this.RaiseAndSetIfChanged(ref _minDataDate, value);
+    }
+    public string? FilterCountry
+    {
+        get => _filterCountry;
+        set => this.RaiseAndSetIfChanged(ref _filterCountry, value);
+    }
     public string? NotificationText
     {
         get => _notificationText;
@@ -112,7 +138,7 @@ public class UserPageViewModel : FirstStepPageViewModelBase
     }
     public string? recievingDate
     {
-        get => $"Data recieving time: {_recievingDate}";
+        get => $"Data receiving time: {_recievingDate}";
         set => this.RaiseAndSetIfChanged(ref _recievingDate, !string.IsNullOrEmpty(value) ? value.Substring(0,10) : value);
     }
     public string? city
@@ -162,6 +188,13 @@ public class UserPageViewModel : FirstStepPageViewModelBase
     public ICommand ParseApiDataCommand { get; }
     public ICommand LogOutCommand { get; }
     public ICommand SaveUserDataCommand { get; }
+    public ICommand SortNoneModeCommand { get; }
+    public ICommand SortByCountryModeCommand { get; }
+    public ICommand SortByStringLengthModeCommand { get; }
+    public ICommand FilterByCountryModeCommand { get; }
+    public ICommand FilterNoneModeCommand { get; }
+    public ICommand MinDataActivateCommand { get; }
+    public ICommand MinDataDeactivateCommand { get; }
     #endregion
 
     #region Methods
@@ -191,11 +224,31 @@ public class UserPageViewModel : FirstStepPageViewModelBase
                 stationNames = new AvaloniaList<string>();
                 foreach (var dataItem in dataArray)
                 {
-                    string name = dataItem["station"]["name"].ToString();
-                    stationNames.Add(ProccesCityName(name));
+                    string name = ProccesCityName(dataItem["station"]["name"].ToString());
+                    stationNames.Add(name);
+                    
                 }
                 Cityes.Clear();
-                Cityes.AddRange(stationNames);
+                switch (_sortingMode)
+                {
+                    case 0:
+                        Cityes.AddRange(stationNames);
+                        break;
+                    case 1:
+                        Cityes.AddRange(stationNames.OrderBy(s => GetLastWord(s)).ToList());
+                        break;
+                    case 2:
+                        Cityes.AddRange(stationNames.OrderBy(s => s.Length).ToList());
+                        break;
+                }
+                if (_filteringIsActive)
+                {
+                    stationNames.Clear();
+                    stationNames.AddRange(Cityes);
+                    Cityes.Clear();
+                    Cityes.AddRange(stationNames.Where(s => GetLastWord(s)
+                        .Equals(FilterCountry, StringComparison.OrdinalIgnoreCase)).ToList());
+                }
             }
         }
         catch (InvalidCastException e)
@@ -203,7 +256,16 @@ public class UserPageViewModel : FirstStepPageViewModelBase
             Debug.WriteLine("Parse city names error");
             throw;
         }
-        
+        string GetLastWord(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                return string.Empty;
+            }
+
+            var words = s.Split(' ');
+            return words.Last();
+        }
     }
     private async void ParseCityDataAsync()
     {
@@ -229,6 +291,19 @@ public class UserPageViewModel : FirstStepPageViewModelBase
                 {
                     JsonObject dataOBJ = (JsonObject)obj["data"];
                     
+                    if (dataOBJ.ContainsKey("time"))
+                    {
+                        recievingDate = obj["data"]["time"]["s"].ToString();
+                        Debug.WriteLine(recievingDate);
+                        if (_minDataIsActive)
+                        {
+                            if (!CheckData(obj["data"]["time"]["s"].ToString().Substring(0, 10)))
+                            {
+                                city = "date is not valid";
+                                goto end;
+                            }
+                        }
+                    }
                     city = dataOBJ.ContainsKey("city")
                         ?ProccesCityName(obj["data"]["city"]["name"].ToString())
                         : "-";
@@ -251,10 +326,7 @@ public class UserPageViewModel : FirstStepPageViewModelBase
                             ?obj["data"]["iaqi"]["h"]["v"].ToString()
                             :"-";
                     }
-                    if (dataOBJ.ContainsKey("time"))
-                    {
-                        recievingDate = obj["data"]["time"]["s"].ToString();
-                    }
+                    
                     if (dataOBJ.ContainsKey("forecast"))
                     {
                         JsonObject forecastDailyOBJ = (JsonObject)obj["data"]["forecast"]["daily"];
@@ -296,6 +368,7 @@ public class UserPageViewModel : FirstStepPageViewModelBase
                 (pm2dot5, pm10, aqi, humidity, temp) = ("-", "-", "-", "-","-");
                 city = "error";
             }
+            end:
             Debug.WriteLine(str);
         }
         catch (NullReferenceException e)
@@ -307,8 +380,26 @@ public class UserPageViewModel : FirstStepPageViewModelBase
         {
             NotificationIsVisible = false;
         }
+        bool CheckData(string date)
+        {
+            DateTime date1;
+            DateTime date2;
+            
+            bool isValidDate1 = DateTime.TryParseExact(date, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out date1);
+            bool isValidDate2 = DateTime.TryParseExact(MinDataDate, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out date2);
+
+            if (isValidDate1 && isValidDate2)
+            {
+                return date1 > date2;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
     #endregion
+
     private void Initialize()
     {
         Series = new ISeries[]
@@ -358,6 +449,37 @@ public class UserPageViewModel : FirstStepPageViewModelBase
         };
 
     }
+
+    private void DisableSorting()
+    {
+        _sortingMode = 0;
+    }
+    private void SetSortingByCountry()
+    {
+        _sortingMode = 1;
+    }
+    private void SetSortingByLength()
+    {
+        _sortingMode = 2;
+    }
+    private void DisableFiltering()
+    {
+        _filteringIsActive = false;
+    }
+
+    private void EnableFiltering()
+    {
+        _filteringIsActive = true;
+    }
+
+    private void ActivateMinData()
+    {
+        _minDataIsActive = true;
+    }
+    private void DeactivateMinData()
+    {
+        _minDataIsActive = false;
+    }
     private void ClearPageData()
     {
         city = null;
@@ -399,7 +521,7 @@ public class UserPageViewModel : FirstStepPageViewModelBase
             TokenExists = DataManager.CheckUserToken(LocalTransfer.UserID);
             if (!TokenExists)
             {
-                Notification(10000,"Set Token!");
+                Notification(5000,"Set Token!");
             }
             LocalTransfer.UserToken = DataManager.GetUserToken(LocalTransfer.UserID);
             SearchCity = DataManager.GetUserData(LocalTransfer.UserID);
