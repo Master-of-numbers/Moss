@@ -72,7 +72,7 @@ public class AuthRegistrationPageViewModel : AuthPageViewModelBase
         }
         else
         {
-            (_UserName, _Password) = (null, null);
+            (_UserName, _Password) = ("", "");
             Debug.Write(DataManager.DisplayUsers());
             LocalTransfer.PageFromList = 1;
             LocalTransfer.RaiseStaticEvent();

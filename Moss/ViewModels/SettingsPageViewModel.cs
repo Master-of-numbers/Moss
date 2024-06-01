@@ -143,12 +143,13 @@ public class SettingsPageViewModel : FirstStepPageViewModelBase
         {
             CanDeleteUser = false;
         }
+
     private void DeleteUser()
-        {
-            DataManager.DeleteUser(LocalTransfer.UserID);
-            NavigateAuthPage();
-            DeactivateDeleteButton();
-        }
+    {
+        DataManager.DeleteUser(LocalTransfer.UserID);
+        DeactivateDeleteButton();
+        NavigateAuthPage();
+    }
     private void SetUserToken()
         {
             DataManager.SetUserToken(LocalTransfer.UserID, UserToken);

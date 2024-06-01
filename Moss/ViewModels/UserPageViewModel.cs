@@ -523,8 +523,11 @@ public class UserPageViewModel : FirstStepPageViewModelBase
             {
                 Notification(5000,"Set Token!");
             }
-            LocalTransfer.UserToken = DataManager.GetUserToken(LocalTransfer.UserID);
-            SearchCity = DataManager.GetUserData(LocalTransfer.UserID);
+            else
+            {
+                LocalTransfer.UserToken = DataManager.GetUserToken(LocalTransfer.UserID);
+                SearchCity = DataManager.GetUserData(LocalTransfer.UserID);
+            }
         }
     }
     private void UpdateAQIBlockColor()
